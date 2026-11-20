@@ -379,7 +379,12 @@ class PostgresGenerator(generator.Generator):
             "CONVERT", e.this, e.args.get("source"), e.args["dest"]
         ),
         exp.CurrentDate: no_paren_current_date_sql,
-        exp.CurrentTimestamp: lambda *_: "CURRENT_TIMESTAMP",
+        exp.CurrentTime: lambda self, e: (
+            self.func("CURRENT_TIME", e.this) if e.this else "CURRENT_TIME"
+        ),
+        exp.CurrentTimestamp: lambda self, e: (
+            self.func("CURRENT_TIMESTAMP", e.this) if e.this else "CURRENT_TIMESTAMP"
+        ),
         exp.CurrentUser: lambda *_: "CURRENT_USER",
         exp.CurrentVersion: rename_func("VERSION"),
         exp.DateAdd: _date_add_sql("+"),
